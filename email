@@ -1,0 +1,25 @@
+#!/bin/sh
+source ./gradle.properties
+pipelineName=$GO_PIPELINE_NAME
+stageName=$GO_STAGE_NAME
+pipelineCounter=$GO_PIPELINE_COUNTER
+currentDate=$(date)
+status=$2
+projectName=$3
+notificationBody="
+Date :$currentDate
+Pipeline Name : $pipelineName
+Stage Name : $stageName
+Pipeline Counter : $pipelineCounter
+Build Status : $status"
+
+echo "Notification Body: $notificationBody"
+
+
+
+url="$app_host/v1/pipelines/notifications?pipelineName=$GO_PIPELINE_NAME&projectName=$projectName&subject=Stage:$GO_PIPELINE_NAME/$GO_PIPELINE_COUNTER/$GO_STAGE_NAME"
+echo $url
+curl -X POST \
+  "$url" \
+  -H 'Content-Type: text/html' \
+  -d "$notificationBody"
